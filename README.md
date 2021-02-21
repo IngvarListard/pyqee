@@ -1,0 +1,2 @@
+# pyqee
+Simple mpv wrapper
