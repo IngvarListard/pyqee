@@ -16,3 +16,49 @@
 - [ ] таймлайн
 - [ ] play/pause
 - [ ] подключение внешних сабов
+** UI
+*** Menu bar
+- [ ] File
+  + [ ] Open (file)
+- [ ] Video
+  + [ ] track
+  + [ ] play
+  + [ ] pause
+  + [ ] stop
+- [ ] Subtitles
+  + [ ] Open
+  + [ ] Position
+*** Control bar
+- [ ] Floating
+- [ ] Fixed
+- [ ] Общие элементы для панели навигации
+  - [ ] timeline
+  - [ ] play
+  - [ ] pause
+  - [ ] next
+  - [ ] prev
+  - [ ] left side panel
+  - [ ] right side panel
+*** Right Side Panel (configurable)
+- [ ] Tab bar:
+  + [ ] Playlist
+  + [ ] Favorites
+  + [ ] Folder view
+  + [ ] Recent
+*** Left Side Panel (configurable)
+- [ ] Tab bar same as [[Right Side Panel (configurable)]]
+*** Context menu
+...
+* Идеи
+- Возможность подключать плагины для онлайн просмотра
+- редактор конфигов
+- список подключенных скриптов
+- окошко с шоткатами
+* Журнал
+** <2021-02-28 Вс>
+- [X] запустить псевдоинтерфейс на переходный период
+- [ ] фиксированный контрол-бар
+  + [ ] таймлайн
+  + [ ] базовые кнопки управления
+- [ ] тулбар с базовыми кнопками
+- [ ] фуллскрин
