@@ -4,7 +4,7 @@ import mpv
 from PySide6 import QtCore, QtGui
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QAction, QIcon
-from PySide6.QtWidgets import QMainWindow, QWidget, QToolBar, QWidgetAction, QVBoxLayout, QMenu
+from PySide6.QtWidgets import QMainWindow, QWidget, QToolBar, QWidgetAction, QVBoxLayout, QMenu, QSlider, QHBoxLayout
 
 from pyqee.ui.resources import qrc_resources
 
@@ -33,21 +33,34 @@ class MainWindow(QMainWindow):
 
         player = mpv.MPV(
             wid=str(int(self.container.winId())),
-            # vo='x11',
+            vo='x11',
             log_handler=print,
             # loglevel='debug',
-            # input_default_bindings=True,
-            # input_vo_keyboard=True,
-            # player_operation_mode='pseudo-gui',
-            # script_opts='osc-layout=box,osc-seekbarstyle=bar,osc-deadzonesize=0,osc-minmousemove=3',
+            input_default_bindings=True,
+            input_vo_keyboard=True,
+            player_operation_mode='pseudo-gui',
+            script_opts='osc-layout=box,osc-seekbarstyle=bar,osc-deadzonesize=0,osc-minmousemove=3',
             osc=True,
-            # config='yes' if RESPECT_USER_CONFIG else 'no',
+            config='yes' if RESPECT_USER_CONFIG else 'no',
             config_dir=CONFIG_DIR
         )
 
         def test_(*args):
             if args[0] == 'dm':
                 self.menu_.exec_(self.container.cursor().pos())
+
+        @player.property_observer('time-pos')
+        def barr(n, v):
+            if v is not None:
+                self.progress_slider.setValue(int(v))
+
+        @player.on_key_press('f')
+        def fullscreen():
+            if self.windowState() & QtCore.Qt.WindowFullScreen:
+                self.showNormal()
+            else:
+                print(456)
+                self.showFullScreen()
 
         # player.register_event_callback()
         player.register_key_binding('MBTN_LEFT', 'cycle fullscreen')
@@ -72,14 +85,18 @@ class MainWindow(QMainWindow):
         help_menu = menu_bar.addMenu('&Help')
 
     def _create_toolbars(self):
+
         control_bar = QToolBar('Control')
+        self.control_bar = control_bar
         control_bar.addActions((
             self.play_action,
             self.pause_action,
             self.next_track_action,
             self.prev_track_action,
         ))
-        help_toolbar = self.addToolBar(Qt.BottomToolBarArea, control_bar)
+        self.addToolBar(Qt.BottomToolBarArea, control_bar)
+
+        self._create_progress_slider()
 
     def _create_actions(self):
         self.open_action = QAction(QIcon(':arrow_down.svg'), '&Open...', self)
@@ -94,15 +111,13 @@ class MainWindow(QMainWindow):
         a = self.menu_.addAction("Test1")
         b = self.menu_.addAction("Test2")
 
-    # def _create_context_menu(self):
-    #     self.centralWidget().setContextMenuPolicy(Qt.ActionsContextMenu)
-    #
-    #     self.centralWidget().addAction(self.open_action)
+    def _create_progress_slider(self):
+        s = QSlider(Qt.Horizontal, self.control_bar)
+        self.progress_slider = s
+        s.setFocusPolicy(Qt.NoFocus)
+        self.control_bar.addWidget(s)
 
-    def mousePressEvent(self, QMouseEvent):
-        print('test')
-        if QMouseEvent.button() == Qt.LeftButton:
-            print("Left Button Clicked")
-        elif QMouseEvent.button() == Qt.RightButton:
-            #do what you want here
-            print("Right Button Clicked")
+        s.setRange(0, 100)
+
+        s.valueChanged.connect(lambda *x, **y: print(x, y))
+        print(123)
