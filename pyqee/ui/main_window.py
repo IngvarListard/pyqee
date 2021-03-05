@@ -4,7 +4,8 @@ import mpv
 from PySide6 import QtCore, QtGui
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QAction, QIcon
-from PySide6.QtWidgets import QMainWindow, QWidget, QToolBar, QWidgetAction, QVBoxLayout, QMenu, QSlider, QHBoxLayout
+from PySide6.QtWidgets import QMainWindow, QWidget, QToolBar, QWidgetAction, QVBoxLayout, QMenu, QSlider, QHBoxLayout, \
+    QFileDialog
 
 from pyqee.ui.resources import qrc_resources
 
@@ -99,12 +100,13 @@ class MainWindow(QMainWindow):
         self._create_progress_slider()
 
     def _create_actions(self):
-        self.open_action = QAction(QIcon(':arrow_down.svg'), '&Open...', self)
-        self.play_action = QAction(QIcon(':arrow_right.svg'), '&Play', self)
-        self.pause_action = QAction(QIcon(':arrow_down.svg'), '&Pause', self)
-        self.stop_action = QAction(QIcon(':arrow_down.svg'), '&Stop', self)
-        self.next_track_action = QAction(QIcon(':arrow_right.svg'), '&Next track', self)
-        self.prev_track_action = QAction(QIcon(':arrow_left.svg'), '&Prev track', self)
+        self.open_action = QAction(QIcon.fromTheme('document-open'), '&Open...', self)
+        self.open_action.triggered.connect(self._open_file_name_dialog)
+        self.play_action = QAction(QIcon.fromTheme('media-playback-start'), '&Play', self)
+        self.pause_action = QAction(QIcon.fromTheme('media-playback-pause'), '&Pause', self)
+        self.stop_action = QAction(QIcon.fromTheme('media-playback-stop'), '&Stop', self)
+        self.next_track_action = QAction(QIcon.fromTheme('media-seek-forward'), '&Next track', self)
+        self.prev_track_action = QAction(QIcon.fromTheme('media-seek-backward'), '&Prev track', self)
 
     def _create_context_menu(self):
         self.menu_ = QMenu()
@@ -120,4 +122,10 @@ class MainWindow(QMainWindow):
         s.setRange(0, 100)
 
         s.valueChanged.connect(lambda *x, **y: print(x, y))
-        print(123)
+
+    def _open_file_name_dialog(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        file_name, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "", "All Files (*);;Python Files (*.py)", options=options)
+        if file_name:
+            print(file_name)

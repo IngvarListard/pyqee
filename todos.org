@@ -66,3 +66,4 @@
 - [X] фуллскрин
 - [ ] playlist
 - [ ] open file (video, audio, subtitles)
+- [ ] drag'n'drop
